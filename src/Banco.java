@@ -40,6 +40,38 @@ public class Banco {
     }
 
 
+        public void transferir(String titularOrigen, String titularDestino, double monto){
+                CuentaBancaria origen =buscarCuentaPorTitular(titularOrigen);
+                CuentaBancaria destino =buscarCuentaPorTitular(titularDestino);
+
+
+
+            if ( origen == null ){
+                System.out.println("La cuenta de origen: "+titularOrigen+" no se encuentra registrada en el banco");
+                return;
+            }
+
+            if ( destino == null){
+                System.out.println("La cuenta de destino: "+titularDestino+" no se encuentra registrada en el banco");
+                return;
+            }
+
+            if (monto <= 0){
+                System.out.println("El monto ingresado debe ser mayor a cero");
+                return;
+            }
+
+            if (origen.getSaldo() < 0){
+                System.out.println("Saldo insuficiente ");
+                return;
+            }
+
+            origen.retirar(monto);
+            destino.depositar(monto);
+            System.out.println("transferencia exitosa de: "+monto+" el nuevo saldo de la cuenta "+destino.getTitular()+" es de "+destino.getSaldo());
+        }
+
+
 
 
 
