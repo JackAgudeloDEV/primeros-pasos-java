@@ -7,6 +7,7 @@ public class Banco {
     //listo que solo almacena objetos de tipo cuentaBancaria
     private List<CuentaBancaria> cuentas;
 
+    // constructor
     public Banco (String nombre){
         this.nombre=nombre;
         this.cuentas = new ArrayList<>(); // iniciar la lista vacia
@@ -16,7 +17,7 @@ public class Banco {
 
     public void registrarcuenta(CuentaBancaria cuenta){
         this.cuentas.add(cuenta);
-        System.out.println("cuenta de "+cuenta.getTitular()+" registrada con exito en: "+ this.nombre);
+        System.out.println("La cuenta de "+cuenta.getTitular()+" registrada con exito en: "+ this.nombre);
     }
 
     // metodo para mostrar todas las cuentas registradas en la lista
@@ -27,48 +28,29 @@ public class Banco {
             System.out.println("Titular: "+cuenta.getTitular() + "| saldo> $"+cuenta.getSaldo());
         }
     }
-
+        // metodo para buscar cuenta por titular
     public CuentaBancaria buscarCuentaPorTitular(String nombreBuscado){
-
         for (CuentaBancaria cuenta: this.cuentas){
             if (cuenta.getTitular().equalsIgnoreCase(nombreBuscado)){
                 return cuenta;
             }
         }
-        System.out.println("El nombre: "+nombreBuscado+" no esta asociado a una cuenta registrada");
-        return  null;
+        throw new CuentaNoEncontradaExcepetion("no existe un cuenta registrada a nombre de: "+nombreBuscado);
     }
 
+        // metodo para transferir dinero de una cuenta a otra
+    public void transferir(String titularOrigen, String titularDestino, double monto){
 
-        public void transferir(String titularOrigen, String titularDestino, double monto){
-                CuentaBancaria origen =buscarCuentaPorTitular(titularOrigen);
-                CuentaBancaria destino =buscarCuentaPorTitular(titularDestino);
+        if (monto <= 0){
+           throw new IllegalArgumentException("El monto a transferir debe de ser mayor a cero");
+        }
 
+        CuentaBancaria origen =buscarCuentaPorTitular(titularOrigen);
+        CuentaBancaria destino =buscarCuentaPorTitular(titularDestino);
 
-
-            if ( origen == null ){
-                System.out.println("La cuenta de origen: "+titularOrigen+" no se encuentra registrada en el banco");
-                return;
-            }
-
-            if ( destino == null){
-                System.out.println("La cuenta de destino: "+titularDestino+" no se encuentra registrada en el banco");
-                return;
-            }
-
-            if (monto <= 0){
-                System.out.println("El monto ingresado debe ser mayor a cero");
-                return;
-            }
-
-            if (origen.getSaldo() < 0){
-                System.out.println("Saldo insuficiente ");
-                return;
-            }
-
-            origen.retirar(monto);
-            destino.depositar(monto);
-            System.out.println("transferencia exitosa de: "+monto+" el nuevo saldo de la cuenta "+destino.getTitular()+" es de "+destino.getSaldo());
+        origen.retirar(monto);
+        destino.depositar(monto);
+        System.out.println("transferencia exitosa de: "+monto+" el nuevo saldo de la cuenta "+destino.getTitular()+" es de "+destino.getSaldo());
         }
 
 

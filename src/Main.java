@@ -4,19 +4,30 @@ public class Main {
     public static void main(String[] args) {//TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         Banco miBanco = new Banco("Banco Tech");
 
-        CuentaBancaria jack = new CuentaBancaria("Jack Agudelo", 500.0);
-        CuentaBancaria maria = new CuentaBancaria("Maria Lopez", 200.0);
-
+        CuentaBancaria jack = new CuentaBancaria("Jack Agudelo", 200.0);
         miBanco.registrarcuenta(jack);
+
+        // Caso 1: Intentar transferir a alguien que no existe
+        try {
+            System.out.println("--- Prueba 1: Cuenta inexistente ---");
+            miBanco.transferir("Jack Agudelo", "Persona Ficticia", 50.0);
+        } catch (CuentaNoEncontradaExcepetion e) {
+            System.out.println("[ERROR 404] " + e.getMessage());
+        } catch (SaldoInsuficieinteException e) {
+            System.out.println("[ERROR 400] " + e.getMessage());
+        }
+
+        // Caso 2: Fondos insuficientes
+        CuentaBancaria maria = new CuentaBancaria("Maria Lopez", 100.0);
         miBanco.registrarcuenta(maria);
 
-        System.out.println("\n--- Intentando transferir $150 de Jack a Maria ---");
-        miBanco.transferir("Jack Agudelo", "Maria Lopez", 150.0);
-
-        System.out.println("\n--- Saldos finales ---");
-        System.out.println("Saldo Jack: $" + jack.getSaldo());   // Debe quedar en 350.0
-        System.out.println("Saldo Maria: $" + maria.getSaldo()); // Debe quedar en 350.0
-
-
+        try {
+            System.out.println("\n--- Prueba 2: Saldo insuficiente ---");
+            miBanco.transferir("Jack Agudelo", "Maria Lopez", 1000.0);
+        } catch (CuentaNoEncontradaExcepetion e) {
+            System.out.println("[ERROR 404] " + e.getMessage());
+        } catch (SaldoInsuficieinteException e) {
+            System.out.println("[ERROR 400] " + e.getMessage());
+        }
     }
 }
